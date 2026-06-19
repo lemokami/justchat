@@ -3,7 +3,6 @@ import { reactive, ref, computed, nextTick, watch } from "vue";
 import {
   Conversation,
   ConversationContent,
-  ConversationEmptyState,
   ConversationScrollButton,
 } from "@/components/ai-elements/conversation";
 import {
@@ -42,6 +41,8 @@ import {
   XIcon,
   PencilIcon,
   Settings2Icon,
+  ArrowUpIcon,
+  SquareIcon,
 } from "@lucide/vue";
 
 const tauri = (window as any).__TAURI__;
@@ -99,6 +100,11 @@ let pendingPrompt: { localId: string; text: string; paths: string[] } | null = n
 const current = computed(() => state.chats.find((c) => c.id === state.activeId) || null);
 const thinking = computed(() => !!current.value && current.value.status === "thinking");
 const canSend = computed(() => state.conn === "connected" && !!current.value && (!!state.input.trim() || state.pending.length > 0));
+const hasMessages = computed(() => !!current.value && current.value.messages.length > 0);
+const greeting = computed(() => {
+  const h = new Date().getHours();
+  return h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening";
+});
 
 // Slash-command menu: open when the input is "/partial" (no space yet).
 const slashPartial = computed(() => {
@@ -447,29 +453,18 @@ boot();
 
     <!-- Main -->
     <main class="flex-1 flex flex-col min-w-0">
-      <header class="h-12 shrink-0 flex items-center justify-between px-4 border-b">
-        <div class="flex items-center gap-2.5">
-          <div class="h-7 w-7 rounded-lg bg-primary text-primary-foreground flex items-center justify-center font-bold text-sm">A</div>
-          <span class="font-semibold">JustChat</span>
-          <span class="ml-2 text-xs px-2 py-0.5 rounded-full"
-            :class="state.conn === 'connected' ? 'bg-green-500/10 text-green-500' : state.conn === 'connecting' ? 'bg-amber-500/10 text-amber-500' : 'bg-destructive/10 text-destructive'">
-            {{ state.conn === 'connected' ? 'Connected · ACP v' + state.protocolVersion : state.conn === 'connecting' ? 'Connecting…' : 'Disconnected' }}
-          </span>
+      <header class="h-12 shrink-0 flex items-center justify-between px-4">
+        <div class="flex items-center gap-2">
+          <span class="font-medium text-sm tracking-tight">JustChat</span>
+          <span class="size-1.5 rounded-full"
+            :class="state.conn === 'connected' ? 'bg-green-500' : state.conn === 'connecting' ? 'bg-amber-500' : 'bg-destructive'"
+            :title="state.conn === 'connected' ? 'Connected · ACP v' + state.protocolVersion : state.conn === 'connecting' ? 'Connecting…' : 'Disconnected'"></span>
         </div>
         <div class="flex items-center gap-2">
-          <template v-if="state.models.length">
-            <span class="text-xs text-muted-foreground">Model</span>
-            <Select v-model="state.currentModel" @update:modelValue="onModelChange">
-              <SelectTrigger class="h-8 text-xs w-[200px]"><SelectValue placeholder="Select model" /></SelectTrigger>
-              <SelectContent>
-                <SelectItem v-for="m in state.models" :key="m.id" :value="m.id">{{ m.name }}</SelectItem>
-              </SelectContent>
-            </Select>
-          </template>
           <span v-if="state.conn === 'connected' && connectedAgent" class="text-xs text-muted-foreground">
             {{ connectedAgent.name }}
           </span>
-          <Button v-if="state.conn === 'connected'" size="sm" variant="outline" @click="disconnect">Disconnect</Button>
+          <Button v-if="state.conn === 'connected'" size="sm" variant="ghost" @click="disconnect">Disconnect</Button>
           <Button v-else size="sm" @click="connectActive">Connect</Button>
           <Button variant="ghost" size="icon-sm" title="Manage agents" @click="openAgents">
             <Settings2Icon class="size-4" />
@@ -477,24 +472,17 @@ boot();
         </div>
       </header>
 
-      <Conversation class="flex-1">
-        <ConversationContent class="max-w-3xl mx-auto w-full gap-4 py-6">
-          <ConversationEmptyState v-if="!current || !current.messages.length"
-            title="Ask your agent anything" description="Chat, run tools, and read files right from your desktop." />
-
+      <Conversation v-if="hasMessages" class="flex-1">
+        <ConversationContent class="max-w-3xl mx-auto w-full gap-6 py-8 px-4">
           <Message v-for="(m, i) in (current ? current.messages : [])" :key="i" :from="m.role === 'agent' ? 'assistant' : m.role">
-            <div v-if="m.role !== 'user'"
-              class="size-7 shrink-0 rounded-full flex items-center justify-center text-[11px] font-bold mt-0.5"
-              :class="m.role === 'agent' ? 'bg-primary text-primary-foreground' : 'bg-destructive/20 text-destructive'">
-              {{ m.role === 'agent' ? (connectedAgent?.name?.charAt(0)?.toUpperCase() || 'A') : '!' }}
-            </div>
             <MessageContent>
               <Reasoning v-if="m.thoughts" :is-streaming="m.streaming" :default-open="false" class="mb-1">
                 <ReasoningTrigger />
                 <ReasoningContent :content="m.thoughts" />
               </Reasoning>
 
-              <p v-if="m.role !== 'agent' && m.content" class="whitespace-pre-wrap break-words">{{ m.content }}</p>
+              <p v-if="m.role !== 'agent' && m.content" class="whitespace-pre-wrap break-words"
+                :class="m.role === 'system' ? 'text-destructive' : ''">{{ m.content }}</p>
 
               <div v-if="m.attachments.length" class="flex flex-wrap gap-2 mt-1">
                 <span v-for="p in m.attachments" :key="p" class="inline-flex items-center gap-1.5 text-xs bg-muted rounded-md px-2 py-1 border">
@@ -521,7 +509,7 @@ boot();
                 </ToolContent>
               </Tool>
 
-              <MessageResponse v-if="m.role === 'agent' && m.content" :content="m.content" />
+              <MessageResponse v-if="m.role === 'agent' && m.content" :content="m.content" class="leading-7" />
 
               <div v-if="m.streaming && !m.content && !m.toolCalls.length" class="inline-flex items-center gap-2 text-muted-foreground text-sm leading-none">
                 <Loader :size="14" />
@@ -533,8 +521,16 @@ boot();
         <ConversationScrollButton />
       </Conversation>
 
-      <div class="px-4 pb-4 pt-2">
-        <div class="relative max-w-3xl mx-auto">
+      <div class="w-full px-4"
+        :class="hasMessages ? 'pb-6 pt-2' : 'flex-1 flex flex-col items-center justify-center'">
+        <!-- Home greeting (shown until the chat has messages) -->
+        <div v-if="!hasMessages" class="text-center mb-7">
+          <div class="mx-auto mb-4 h-12 w-12 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center font-bold text-lg">A</div>
+          <h1 class="text-2xl font-semibold tracking-tight">{{ greeting }}</h1>
+          <p class="text-muted-foreground text-sm mt-1.5">Chat, run tools, and read files right from your desktop.</p>
+        </div>
+
+        <div class="relative w-full max-w-3xl mx-auto">
           <!-- Slash command menu -->
           <div v-if="slashOpen"
             class="absolute bottom-full mb-2 left-0 right-0 max-h-72 overflow-y-auto rounded-xl border bg-popover shadow-lg p-1 z-20">
@@ -563,18 +559,36 @@ boot();
             </span>
           </div>
 
-          <!-- Input -->
-          <div class="flex items-end gap-2 rounded-2xl border bg-card px-2 py-2 focus-within:border-primary/60 transition-colors">
-            <Button variant="ghost" size="icon-sm" class="shrink-0" title="Attach files" @click="attach">
-              <PaperclipIcon class="size-4" />
-            </Button>
+          <!-- Composer: textarea on top, controls row below -->
+          <div class="rounded-3xl border bg-card shadow-sm px-3 pt-3 pb-2 focus-within:border-primary/50 transition-colors">
             <textarea ref="ta" v-model="state.input" rows="1" @keydown="onKey" @input="autogrow"
               :disabled="state.conn !== 'connected'"
-              :placeholder="state.conn === 'connected' ? 'Message agent…  ( / for commands · Enter to send · Shift+Enter for newline )' : 'Connect an agent to start chatting…'"
-              class="flex-1 bg-transparent resize-none outline-none py-2 text-sm max-h-40 placeholder:text-muted-foreground disabled:opacity-60"></textarea>
-            <Button v-if="thinking" variant="secondary" size="sm" class="shrink-0" @click="send">Stop</Button>
-            <Button v-else size="sm" class="shrink-0" :disabled="!canSend" @click="send">Send</Button>
+              :placeholder="state.conn === 'connected' ? 'Message agent…' : 'Connect an agent to start chatting…'"
+              class="w-full bg-transparent resize-none outline-none px-1 pb-2 text-sm max-h-40 placeholder:text-muted-foreground disabled:opacity-60"></textarea>
+            <div class="flex items-center gap-1">
+              <Button variant="ghost" size="icon-sm" class="shrink-0 rounded-full" title="Attach files" @click="attach">
+                <PaperclipIcon class="size-4" />
+              </Button>
+              <Select v-if="state.models.length" v-model="state.currentModel" @update:modelValue="onModelChange">
+                <SelectTrigger class="h-7 gap-1 border-0 bg-transparent shadow-none px-2 text-xs text-muted-foreground hover:text-foreground focus:ring-0">
+                  <SelectValue placeholder="Model" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem v-for="m in state.models" :key="m.id" :value="m.id">{{ m.name }}</SelectItem>
+                </SelectContent>
+              </Select>
+              <div class="flex-1"></div>
+              <Button v-if="thinking" variant="secondary" size="icon-sm" class="shrink-0 rounded-full" title="Stop" @click="send">
+                <SquareIcon class="size-3.5" />
+              </Button>
+              <Button v-else size="icon-sm" class="shrink-0 rounded-full" :disabled="!canSend" title="Send" @click="send">
+                <ArrowUpIcon class="size-4" />
+              </Button>
+            </div>
           </div>
+          <p class="text-center text-[11px] text-muted-foreground mt-2">
+            / for commands · Enter to send · Shift+Enter for newline
+          </p>
         </div>
       </div>
     </main>
