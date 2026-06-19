@@ -176,7 +176,7 @@ async fn run_protocol(
     });
 
     // Handshake.
-    match protocol::initialize(&conn).await {
+    match protocol::initialize_with(&conn, shared.settings.file_access != crate::settings::FileAccess::OutputOnly).await {
         Ok(info) => {
             let _ = event_tx.send(Event::Connected {
                 protocol_version: info.protocol_version,

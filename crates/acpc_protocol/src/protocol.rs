@@ -663,11 +663,11 @@ impl acp::Client for KiroClient {
 ///
 /// We honestly declare fs read/write and terminal support; the corresponding
 /// handlers are completed in Task 13.
-pub fn default_client_capabilities() -> acp::ClientCapabilities {
+pub fn default_client_capabilities(write_text_file: bool) -> acp::ClientCapabilities {
     acp::ClientCapabilities {
         fs: acp::FileSystemCapability {
             read_text_file: true,
-            write_text_file: true,
+            write_text_file,
             meta: None,
         },
         terminal: true,
@@ -734,10 +734,20 @@ where
 
 /// Perform the `initialize` handshake and return the negotiated info.
 pub async fn initialize(conn: &acp::ClientSideConnection) -> Result<ConnectedInfo> {
+    initialize_with(conn, true).await
+}
+
+/// Like [`initialize`], but controls whether the client advertises the
+/// `fs.write_text_file` capability (disabled in output-only mode so agents
+/// inline content instead of claiming to save files).
+pub async fn initialize_with(
+    conn: &acp::ClientSideConnection,
+    write_text_file: bool,
+) -> Result<ConnectedInfo> {
     let resp = conn
         .initialize(acp::InitializeRequest {
             protocol_version: acp::V1,
-            client_capabilities: default_client_capabilities(),
+            client_capabilities: default_client_capabilities(write_text_file),
             meta: None,
         })
         .await
