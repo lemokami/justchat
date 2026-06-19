@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Building ACP Chatbot — the full story</title>
+  <title>Building JustChat — the full story</title>
   <meta name="description" content="How we built a native desktop client for any ACP agent: decisions, challenges, and current limitations." />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header class="nav">
     <div class="wrap">
-      <div class="brand"><span class="logo">A</span> ACP Chatbot</div>
+      <div class="brand"><span class="logo">A</span> JustChat</div>
       <nav>
         <a href="index.html">Home</a>
         <a href="#journey">Journey</a>
@@ -134,7 +134,7 @@
         <li><strong>No true context resume.</strong> Reopening a saved chat shows the full transcript, but the agent’s memory isn’t restored — a new prompt starts a fresh ACP session. Real resume needs ACP <code>session/load</code> against the agent’s own session store.</li>
         <li><strong>Unsigned builds.</strong> The distributed <code>.dmg</code> isn’t codesigned/notarized, so macOS Gatekeeper requires right-click → Open. Proper distribution needs an Apple Developer ID.</li>
         <li><strong>Auth is env-only.</strong> Agents that authenticate via API-key env vars work; agents requiring an interactive ACP <code>authenticate</code> (OAuth-style) flow aren’t wired to a UI yet.</li>
-        <li><strong>Agent must be installed.</strong> ACP Chatbot is a client; it spawns an agent you’ve installed and put on PATH. A missing binary surfaces a clear “failed to start agent”.</li>
+        <li><strong>Agent must be installed.</strong> JustChat is a client; it spawns an agent you’ve installed and put on PATH. A missing binary surfaces a clear “failed to start agent”.</li>
         <li><strong>Images sent inline.</strong> Image attachments are base64-encoded into the prompt, which inflates large payloads; other files are sent as <code>file://</code> resource links.</li>
         <li><strong>Slash commands depend on the agent.</strong> The <code>/</code> menu lists whatever the agent advertises via ACP; if it advertises none, the menu is empty.</li>
         <li><strong>Per-OS builds.</strong> Tauri can’t cross-compile; installers are produced on each OS (handled by the CI workflow on tag).</li>
