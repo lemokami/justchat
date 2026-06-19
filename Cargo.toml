@@ -4,7 +4,7 @@ members = ["crates/acpc_protocol", "crates/acpc_core", "crates/acpc_app"]
 
 [workspace.package]
 edition = "2021"
-version = "0.1.0"
+version = "0.1.1"
 license = "Apache-2.0"
 repository = "https://github.com/local/kiroui"
 

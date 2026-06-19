@@ -4,7 +4,7 @@ version = 4
 
 [[package]]
 name = "acpc_app"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "acpc_protocol",
  "rfd",
@@ -19,7 +19,7 @@ dependencies = [
 
 [[package]]
 name = "acpc_core"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "acpc_protocol",
  "pulldown-cmark",
@@ -27,7 +27,7 @@ dependencies = [
 
 [[package]]
 name = "acpc_protocol"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "agent-client-protocol",
  "anyhow",
