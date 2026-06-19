@@ -1,0 +1,7 @@
+{
+  "autoApprovePermissions": "ask",
+  "cwd": null,
+  "env": [
+    { "name": "EXAMPLE_VAR", "value": "example-value" }
+  ]
+}

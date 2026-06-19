@@ -1,0 +1,13 @@
+[package]
+name = "kiro_core"
+edition.workspace = true
+version.workspace = true
+license.workspace = true
+
+[lib]
+name = "kiro_core"
+path = "src/lib.rs"
+
+[dependencies]
+kiro_acp = { path = "../kiro_acp" }
+pulldown-cmark.workspace = true

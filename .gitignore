@@ -1,0 +1,15 @@
+# Rust
+/target
+
+# Node / frontend
+**/node_modules
+crates/kiro_tauri/ui/dist
+
+# OS / editor
+.DS_Store
+*.log
+.idea
+.vscode
+
+# Local runtime data (chats, agents, api keys)
+.kiroui

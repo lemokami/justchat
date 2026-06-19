@@ -1,0 +1,31 @@
+[workspace]
+resolver = "2"
+members = ["crates/kiro_acp", "crates/kiro_core", "crates/kiro_tauri", "crates/kiro_ui"]
+
+[workspace.package]
+edition = "2021"
+version = "0.1.0"
+license = "Apache-2.0"
+repository = "https://github.com/local/kiroui"
+
+[workspace.dependencies]
+# ACP protocol (trait-based API: Client/Agent traits + ClientSideConnection).
+# The 0.14+ line replaced this with a builder API; we deliberately pin the
+# trait-based 0.4.x which is wire-compatible with kiro-cli's ACP protocol v1.
+agent-client-protocol = { version = "=0.4.3", features = ["unstable"] }
+
+anyhow = "1"
+thiserror = "1"
+futures = "0.3"
+async-trait = "0.1"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["rt", "rt-multi-thread", "macros", "process", "io-util", "io-std", "sync", "time", "fs"] }
+tokio-util = { version = "0.7", features = ["compat"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+pulldown-cmark = "0.12"
+
+[profile.dev]
+# Faster incremental builds while iterating on the heavy gpui dependency.
+opt-level = 0
