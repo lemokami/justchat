@@ -1,4 +1,4 @@
-# ACP Chatbot
+# JustChat
 
 A native desktop chat client for **any [ACP](https://agentclientprotocol.com)
 (Agent Client Protocol) agent** — bring your own agent (kiro‑cli, Gemini CLI,
@@ -52,7 +52,7 @@ serializable `Command`/`Event` enums.
 - **Rust 1.96+** (pinned via `rust-toolchain.toml`).
 - **Node.js 18+** (to build the web frontend).
 - **An ACP agent installed and on `PATH`** — e.g. `kiro-cli`, `gemini`, or
-  `npx` (for the Claude Code adapter). ACP Chatbot is a *client*; it spawns the
+  `npx` (for the Claude Code adapter). JustChat is a *client*; it spawns the
   agent you choose.
 
 ## Develop
@@ -91,7 +91,7 @@ cd ..                                           # crates/acpc_app
 ui/node_modules/.bin/tauri build                # release build + .app + .dmg
 ```
 
-Artifacts land in `target/release/bundle/` (`macos/ACP Chatbot.app`,
+Artifacts land in `target/release/bundle/` (`macos/JustChat.app`,
 `dmg/*.dmg`). Builds are **per‑OS** (Tauri can't cross‑compile); use CI
 (`tauri-action`) for multi‑platform releases.
 

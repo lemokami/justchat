@@ -1,4 +1,4 @@
-//! Framework-independent application state for ACP Chatbot.
+//! Framework-independent application state for JustChat.
 //!
 //! [`AppState`] is deliberately free of any GPUI types so the full
 //! command/event state machine can be unit-tested headlessly. The GPUI layer

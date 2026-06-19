@@ -1,4 +1,4 @@
-//! ACP Chatbot — Tauri backend.
+//! JustChat — Tauri backend.
 //!
 //! A generic ACP client: the frontend chooses an *agent profile* (any command +
 //! args + env), and this backend spawns it via the `acpc_protocol` engine, forwarding

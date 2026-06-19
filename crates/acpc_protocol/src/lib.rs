@@ -1,4 +1,4 @@
-//! `acpc_protocol` — headless protocol and runtime layer for ACP Chatbot.
+//! `acpc_protocol` — headless protocol and runtime layer for JustChat.
 //!
 //! This crate manages the `kiro-cli acp` subprocess and speaks the Agent
 //! Client Protocol (ACP) over its stdio, exposing a small, serializable

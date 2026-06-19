@@ -590,7 +590,7 @@ impl acp::Client for KiroClient {
     }
 }
 
-/// The capabilities ACP Chatbot advertises to the agent.
+/// The capabilities JustChat advertises to the agent.
 ///
 /// We honestly declare fs read/write and terminal support; the corresponding
 /// handlers are completed in Task 13.

@@ -450,7 +450,7 @@ boot();
       <header class="h-12 shrink-0 flex items-center justify-between px-4 border-b">
         <div class="flex items-center gap-2.5">
           <div class="h-7 w-7 rounded-lg bg-primary text-primary-foreground flex items-center justify-center font-bold text-sm">A</div>
-          <span class="font-semibold">ACP Chatbot</span>
+          <span class="font-semibold">JustChat</span>
           <span class="ml-2 text-xs px-2 py-0.5 rounded-full"
             :class="state.conn === 'connected' ? 'bg-green-500/10 text-green-500' : state.conn === 'connecting' ? 'bg-amber-500/10 text-amber-500' : 'bg-destructive/10 text-destructive'">
             {{ state.conn === 'connected' ? 'Connected · ACP v' + state.protocolVersion : state.conn === 'connecting' ? 'Connecting…' : 'Disconnected' }}

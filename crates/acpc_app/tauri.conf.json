@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "ACP Chatbot",
+  "productName": "JustChat",
   "version": "0.1.1",
   "identifier": "com.acpchatbot.app",
   "build": {
@@ -11,7 +11,7 @@
     "windows": [
       {
         "label": "main",
-        "title": "ACP Chatbot",
+        "title": "JustChat",
         "width": 1100,
         "height": 760,
         "minWidth": 720,

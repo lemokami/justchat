@@ -68,7 +68,7 @@ jobs:
         with:
           projectPath: crates/acpc_app
           tagName: ${{ github.ref_name }}
-          releaseName: "ACP Chatbot ${{ github.ref_name }}"
+          releaseName: "JustChat ${{ github.ref_name }}"
           releaseBody: "Native desktop client for any ACP agent. Download the installer for your platform below."
           releaseDraft: false
           prerelease: false

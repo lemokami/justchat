@@ -1,4 +1,4 @@
-# ACP Chatbot — Architecture
+# JustChat — Architecture
 
 A native desktop client for [`kiro-cli`](https://kiro.dev) that speaks the
 [Agent Client Protocol](https://agentclientprotocol.com) (ACP, JSON-RPC 2.0 over

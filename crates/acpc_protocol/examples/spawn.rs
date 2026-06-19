@@ -22,7 +22,7 @@ async fn main() -> anyhow::Result<()> {
             let config = SubprocessConfig::command("cat", Vec::<String>::new(), cwd);
             let (proc, mut stdin, mut stdout) = Subprocess::spawn(&config)?;
 
-            let line = "hello from ACP Chatbot\n";
+            let line = "hello from JustChat\n";
             print!("-> writing: {line}");
             stdin.write_all(line.as_bytes()).await?;
             stdin.flush().await?;

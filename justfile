@@ -1,4 +1,4 @@
-# ACP Chatbot dev tasks. Run `just <task>`.
+# JustChat dev tasks. Run `just <task>`.
 
 # Build the whole workspace.
 build:

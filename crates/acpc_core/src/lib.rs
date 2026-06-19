@@ -1,4 +1,4 @@
-//! `acpc_core` — framework-independent application state for ACP Chatbot.
+//! `acpc_core` — framework-independent application state for JustChat.
 //!
 //! Holds the [`AppState`] command/event state machine, free of any GPUI types
 //! so it can be unit-tested headlessly. The `acpc_app` crate wraps this in a

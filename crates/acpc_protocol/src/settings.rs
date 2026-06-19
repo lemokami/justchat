@@ -1,6 +1,6 @@
 //! Permissions/configuration model loaded from `acp_settings.json`.
 //!
-//! Controls how ACP Chatbot responds to `session/request_permission` and provides
+//! Controls how JustChat responds to `session/request_permission` and provides
 //! working-directory and environment context for the agent.
 
 use std::path::{Path, PathBuf};
@@ -19,7 +19,7 @@ pub enum AutoApprove {
     AllowAll,
 }
 
-/// ACP Chatbot settings, typically deserialized from `acp_settings.json`.
+/// JustChat settings, typically deserialized from `acp_settings.json`.
 #[derive(Debug, Clone, Default, Deserialize)]
 #[serde(rename_all = "camelCase", default)]
 pub struct Settings {
